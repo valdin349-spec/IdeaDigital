@@ -30,7 +30,7 @@ function normalizeExperience(raw: any): Experience {
     background_color: raw.background_color || d.background || '#ffffff',
     text_color: raw.text_color || '#111827',
     gallery_style: raw.gallery_style || 'grid',
-    published: raw.published ?? true,
+    published: raw.published?? true,
     created_at: raw.created_at || new Date().toISOString(),
     updated_at: raw.updated_at || new Date().toISOString(),
   };
@@ -38,12 +38,12 @@ function normalizeExperience(raw: any): Experience {
 
 export async function loadExperience(slug: string): Promise<ExperienceData | null> {
   const { data: experience, error } = await supabase
-    .from('experiences')
-    .select('*')
-    .eq('slug', slug)
-    .maybeSingle();
+   .from('experiences')
+   .select('*')
+   .eq('slug', slug)
+   .maybeSingle();
 
-  if (error || !experience) {
+  if (error ||!experience) {
     console.error('loadExperience error', error);
     return null;
   }
@@ -70,6 +70,6 @@ export async function loadExperienceAdmin(slug: string): Promise<ExperienceData 
 
 export async function loadAllExperiences(): Promise<Experience[]> {
   const { data, error } = await supabase.from('experiences').select('*').order('updated_at', { ascending: false });
-  if (error || !data) return [];
+  if (error ||!data) return [];
   return data.map(normalizeExperience);
 }
