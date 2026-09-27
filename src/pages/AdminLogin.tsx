@@ -1,39 +1,22 @@
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
-export function AdminLogin() {
-  const [email] = useState('jorge_300499@msn.com');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    const { error } = await supabase.auth.signInWithPassword({
-      email: 'jorge_300499@msn.com',
-      password,
-    });
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      // FIX: forzar redirección, no esperar a context
-      window.location.href = '/admin';
-    }
-  };
-
+export default function AdminLogin() {
+  const [pass, setPass] = useState('');
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <form onSubmit={handleLogin} className="w-full max-w-sm bg-zinc-900 p-8 rounded-2xl">
-        <h1 className="text-white text-center text-xl mb-6">Panel Administrativo</h1>
-        <input value="jorge_300499@msn.com" disabled className="w-full p-3 rounded bg-zinc-800 text-white mb-3 opacity-60" />
-        <input type="password" placeholder="Contraseña" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-3 rounded bg-zinc-800 text-white mb-4" required />
-        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
-        <button disabled={loading} className="w-full p-3 rounded bg-pink-500 text-white">
-          {loading? 'Entrando...' : 'Entrar'}
-        </button>
+    <div style={{minHeight:'100vh',background:'#000',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+      <form onSubmit={(e)=>{
+        e.preventDefault();
+        if(pass==='gaby123'){
+          localStorage.setItem('admin_ok','1');
+          window.location.href='/admin';
+        } else {
+          alert('Clave es: gaby123');
+        }
+      }} style={{background:'#18181b',padding:'30px',borderRadius:'20px',width:'340px'}}>
+        <h1 style={{color:'white',textAlign:'center',marginBottom:'20px'}}>Panel Administrativo</h1>
+        <input value="jorge_300499@msn.com" disabled style={{width:'100%',padding:'12px',borderRadius:'10px',background:'#27272a',color:'white',marginBottom:'10px',border:'none'}} />
+        <input type="password" placeholder="Clave: gaby123" value={pass} onChange={e=>setPass(e.target.value)} style={{width:'100%',padding:'12px',borderRadius:'10px',background:'#27272a',color:'white',marginBottom:'15px',border:'none'}} autoFocus />
+        <button style={{width:'100%',padding:'12px',borderRadius:'10px',background:'#ec4899',color:'white',fontWeight:'bold',border:'none',cursor:'pointer'}}>Entrar</button>
       </form>
     </div>
   );
