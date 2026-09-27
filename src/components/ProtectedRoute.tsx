@@ -2,8 +2,7 @@ import { Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // SIEMPRE LOS HOOKS PRIMERO - ARRIBA DE TODO
+export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -28,3 +27,5 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   return <>{children}</>
 }
+
+export default ProtectedRoute
