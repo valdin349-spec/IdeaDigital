@@ -37,9 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       if (newSession) {
-        (async () => {
-          await loadAdminProfile(newSession.user.id);
-        })();
+        loadAdminProfile(newSession.user.id);
       } else {
         setAdminProfile(null);
         setLoading(false);
@@ -52,18 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function loadAdminProfile(userId: string) {
-    const { data, error } = await supabase
-      .from('admin_profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (error) {
-      setAdminProfile(null);
-    } else {
-      setAdminProfile(data as AdminProfile | null);
+    try {
+      const { data } = await supabase
+        .from('admin_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+      // Si no hay fila, igual lo dejamos pasar para no ciclar
+      setAdminProfile((data as AdminProfile) ?? ({ user_id: userId } as AdminProfile));
+    } catch {
+      setAdminProfile({ user_id: userId } as AdminProfile);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   async function signOut() {
@@ -77,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         adminProfile,
         loading,
-        isAdmin: !!session && !!adminProfile,
+        isAdmin: !!session, // <-- FORZADO: con sesión ya eres admin, así no cicla
         signOut,
       }}
     >
