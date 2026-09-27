@@ -48,7 +48,6 @@ export function ExperiencePage() {
   const { experience, photos, sections, storyItems } = data;
   const enabledSections = sections.filter((s) => s.enabled);
 
-  // ANTI-PANTALLA-NEGRA: si no hay secciones, no dejamos pantalla vacía
   if (enabledSections.length === 0) {
     return (
       <div
@@ -60,7 +59,7 @@ export function ExperiencePage() {
           {experience.subtitle && <p className="text-xl mb-6 opacity-80">{experience.subtitle}</p>}
           {experience.message && <p className="mb-8">{experience.message}</p>}
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 text-left">
-            <b>Fix aplicado:</b> Ya no es pantalla negra. Tienes 10 secciones creadas en la BD pero aún vacías. Ve a <code>/admin</code> para editar contenido, fotos y música.
+            <b>Fix aplicado:</b> Ya no es pantalla negra. Ve a <code>/admin</code> para editar contenido.
           </div>
         </div>
       </div>
