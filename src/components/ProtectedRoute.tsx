@@ -1,28 +1,19 @@
 import { Navigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useAuth } from '@/lib/auth-context'
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null)
-      setLoading(false)
-    })
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => listener.subscription.unsubscribe()
-  }, [])
+  const { user, loading } = useAuth()
 
   if (loading) {
-    return <div style={{minHeight:'100vh', background:'#000', color:'#ec4899', display:'flex', alignItems:'center', justifyContent:'center'}}>Cargando...</div>
+    return (
+      <div style={{minHeight:'100vh', background:'#0a0a0a', color:'#ec4899', display:'flex', alignItems:'center', justifyContent:'center'}}>
+        Cargando...
+      </div>
+    )
   }
 
   if (!user) {
-    return <Navigate to="/admin-login" replace />
+    return <Navigate to="/admin/login" replace />
   }
 
   return <>{children}</>
