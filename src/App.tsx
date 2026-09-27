@@ -3,17 +3,18 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
-const AdminLogin = lazy(() => import('@/pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('@/pages/AdminDashboard'));
-const AdminEditor = lazy(() => import('@/pages/AdminEditor'));
-const AdminPreview = lazy(() => import('@/pages/AdminPreview'));
-const ExperiencePage = lazy(() => import('@/pages/ExperiencePage'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
+// Fix universal: agarra default o named
+const AdminLogin = lazy(() => import('@/pages/AdminLogin').then((m: any) => ({ default: m.default || m.AdminLogin })));
+const AdminDashboard = lazy(() => import('@/pages/AdminDashboard').then((m: any) => ({ default: m.default || m.AdminDashboard })));
+const AdminEditor = lazy(() => import('@/pages/AdminEditor').then((m: any) => ({ default: m.default || m.AdminEditor })));
+const AdminPreview = lazy(() => import('@/pages/AdminPreview').then((m: any) => ({ default: m.default || m.AdminPreview })));
+const ExperiencePage = lazy(() => import('@/pages/ExperiencePage').then((m: any) => ({ default: m.default || m.ExperiencePage })));
+const NotFound = lazy(() => import('@/pages/NotFound').then((m: any) => ({ default: m.default || m.NotFound })));
 
 function Loading() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-      <div className="w-12 h-12 rounded-full border-2 border-rose-500/30 border-t-rose-500 animate-spin" />
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="w-12 h-12 rounded-full border-2 border-pink-500/30 border-t-pink-500 animate-spin" />
     </div>
   );
 }
@@ -21,7 +22,6 @@ function Loading() {
 function AppRoutes() {
   const { loading } = useAuth();
   if (loading) return <Loading />;
-
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
