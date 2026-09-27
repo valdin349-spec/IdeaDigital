@@ -2,17 +2,17 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/lib/auth-context'
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  const { session, isAdmin, loading } = useAuth()
 
   if (loading) {
     return (
-      <div style={{minHeight:'100vh', background:'#0a0a0a', color:'#ec4899', display:'flex', alignItems:'center', justifyContent:'center'}}>
-        Cargando...
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-2 border-rose-500/30 border-t-rose-500 animate-spin" />
       </div>
     )
   }
 
-  if (!user) {
+  if (!session || !isAdmin) {
     return <Navigate to="/admin/login" replace />
   }
 
